@@ -42,7 +42,7 @@ function restore() {
     inputs.provider.value = items.provider
     inputs.keepStats.checked = items.keepStats
     inputs.saveArticle.value = items.saveArticle || ''
-    if (typeof inputs.manualTrigger !== 'undefined') {
+    if (typeof inputs.manualTrigger') {
       inputs.manualTrigger.checked = !!items.manualTrigger
     }
 
