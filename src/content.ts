@@ -45,25 +45,27 @@ async function createFloatingButton(siteBot) {
 
 if (site !== undefined) {
   const siteBot = new SiteBot(site, document.body, domain)
-  ;(async () => {
-    const items = await browser.storage.sync.get({ manualTrigger: false, disabledSites: [] })
-    if (items.disabledSites && items.disabledSites.includes(domain)) {
-      return
-    }
-    if (items.manualTrigger) {
-      createFloatingButton(siteBot)
-    } else {
-      if (siteBot.site.waitOnLoad) {
-        if (document.readyState === 'complete') {
-          siteBot.start(siteBot.site.waitOnLoad)
-        } else {
-          window.addEventListener('load', () => {
-            siteBot.start(siteBot.site.waitOnLoad)
-          })
+    ; (async () => {
+      const items = await browser.storage.sync.get({ manualTrigger: false, disabledSites: [] })
+      if (items.disabledSites && items.disabledSites.includes(domain)) {
+        return
+      }
+      if (items.manualTrigger) {
+        if (siteBot.extractor.hasPaywall()) {
+          createFloatingButton(siteBot)
         }
       } else {
-        siteBot.start()
+        if (siteBot.site.waitOnLoad) {
+          if (document.readyState === 'complete') {
+            siteBot.start(siteBot.site.waitOnLoad)
+          } else {
+            window.addEventListener('load', () => {
+              siteBot.start(siteBot.site.waitOnLoad)
+            })
+          }
+        } else {
+          siteBot.start()
+        }
       }
-    }
-  })()
+    })()
 }
